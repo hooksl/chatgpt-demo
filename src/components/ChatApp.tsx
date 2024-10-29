@@ -18,7 +18,7 @@ const ChatApp: React.FC = () => {
     useEffect(() => {
         // 在应用加载时添加欢迎词
         const welcomeMessage: Message = {
-            text: '欢迎来到 ChatGPT UI！有什么我可以帮助您的吗？',
+            text: '欢迎来到 ChatGPT Demo测试！有什么我可以帮助您的吗？',
             sender: 'bot',
         };
         setMessages([welcomeMessage]);
@@ -49,7 +49,7 @@ const ChatApp: React.FC = () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    // "model": "mistralai/mistral-7b-instruct",
+                    // "model": "google/gemma-2-27b-it",
                     "model": "mistralai/mistral-7b-instruct:free",
                     "messages": recentMessages
                 })
