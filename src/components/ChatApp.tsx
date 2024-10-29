@@ -8,10 +8,9 @@ interface Message {
     text: string;
     sender: 'user' | 'bot';
 }
-const OPENROUTER_API_KEY = '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';
-const YOUR_SITE_URL = '';
-const YOUR_SITE_NAME = '';
-
+const YOUR_SITE_URL = process.env.YOUR_SITE_URL;
+const YOUR_SITE_NAME = process.env.YOUR_SITE_NAME;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 const ChatApp: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
