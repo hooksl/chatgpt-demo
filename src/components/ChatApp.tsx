@@ -34,6 +34,14 @@ const ChatApp: React.FC = () => {
 
         try {
             setIsTyping(true);  // 开始输入
+
+            const recentMessages = messages.slice(-5).map((msg) => ({
+                role: msg.sender === 'user' ? 'user' : 'bot',
+                content: msg.text,
+            }));
+
+            recentMessages.push({ role: 'user', content: text });
+
             const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -45,12 +53,13 @@ const ChatApp: React.FC = () => {
                 body: JSON.stringify({
                     // "model": "mistralai/mistral-7b-instruct",
                     "model": "mistralai/mistral-7b-instruct:free",
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": text
-                        }
-                    ]
+                    // "messages": [
+                    //     {
+                    //         "role": "user",
+                    //         "content": text
+                    //     }
+                    // ]
+                    "messages": recentMessages
                 })
             });
 
