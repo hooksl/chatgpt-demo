@@ -35,7 +35,7 @@ const ChatApp: React.FC = () => {
         try {
             setIsTyping(true);  // 开始输入
 
-            const recentMessages = messages.slice(-5).map((msg) => ({
+            const recentMessages = messages.slice(-15).map((msg) => ({
                 role: msg.sender === 'user' ? 'user' : 'bot',
                 content: msg.text,
             }));
@@ -125,12 +125,7 @@ const ChatApp: React.FC = () => {
         >
             <Typography variant="h4" align="center" sx={{ m: 2 }}>
             </Typography>
-            <MessageList messages={messages} />
-            {isTyping && (
-                <Typography variant="body2" align="center" color="textSecondary">
-                    正在输入...
-                </Typography>
-            )}
+            <MessageList messages={messages} isTyping={isTyping} />
             <MessageInput onSend={handleSend} />
         </Box>
     );

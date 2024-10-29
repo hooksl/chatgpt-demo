@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography } from '@mui/material';
+import { CircularProgress, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography } from '@mui/material';
 import Image from 'next/image';
 interface Message {
     text: string;
@@ -8,9 +8,10 @@ interface Message {
 
 interface MessageListProps {
     messages: Message[];
+    isTyping: boolean;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+const MessageList: React.FC<MessageListProps> = ({ messages, isTyping }) => {
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -46,6 +47,31 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                 </ListItem>
             ))
             }
+            {isTyping && (
+                <ListItem alignItems="flex-start">
+                    <ListItemAvatar>
+                        <Avatar>
+                            <Image
+                                src={'/chatgpt-icon.png'} // 引用 public 目录下的图片
+                                alt={'ChatGPT Avatar'}
+                                width={40}   // 设置宽度
+                                height={40}  // 设置高度
+                            />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            <Typography
+                                variant="body1"
+                                color={'secondary'}
+                            >
+                                {'ChatGPT'}
+                                <CircularProgress size={12} sx={{ ml: 1 }} color="inherit" />
+                            </Typography>
+                        }
+                    />
+                </ListItem>
+            )}
             {/* 用于保持滚动到列表底部 */}
             <div ref={bottomRef} />
         </List >
