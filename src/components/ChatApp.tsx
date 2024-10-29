@@ -18,12 +18,18 @@ const ChatApp: React.FC = () => {
     const [isTyping, setIsTyping] = useState(false);  // 新增状态用于逐字显示
     useEffect(() => {
         // 在应用加载时添加欢迎词
-        const welcomeMessage: Message = { text: '欢迎来到 ChatGPT UI！有什么我可以帮助您的吗？', sender: 'bot' };
+        const welcomeMessage: Message = {
+            text: '欢迎来到 ChatGPT UI！有什么我可以帮助您的吗？',
+            sender: 'bot',
+        };
         setMessages([welcomeMessage]);
     }, []);
 
     const handleSend = async (text: string) => {
-        const newMessage: Message = { text, sender: 'user' };
+        const newMessage: Message = {
+            text: text,
+            sender: 'user',
+        };
         setMessages([...messages, newMessage]);
 
         try {
@@ -61,15 +67,23 @@ const ChatApp: React.FC = () => {
             displayTypingEffect(botMessageText);
         } catch (error) {
             console.error('Error fetching response:', error);
-            const errorMessage: Message = { text: 'Sorry, something went wrong!', sender: 'bot' };
+            const errorMessage: Message = {
+                text: 'Sorry, something went wrong!',
+                sender: 'bot',
+            };
             setMessages((prevMessages) => [...prevMessages, errorMessage]);
             setIsTyping(false); // 完成逐字显示
+        } finally {
+            setIsTyping(false);
         }
 
     };
     const displayTypingEffect = (text: string) => {
         let index = 0;
-        const botMessage: Message = { text: '', sender: 'bot' }; // 初始空文本
+        const botMessage: Message = {
+            text: '',
+            sender: 'bot',
+        }; // 初始空文本
 
         // 逐字更新文本
         const typeInterval = setInterval(() => {

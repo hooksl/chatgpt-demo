@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { List, ListItem, ListItemText, Box } from '@mui/material';
-
+import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography } from '@mui/material';
+import Image from 'next/image';
 interface Message {
     text: string;
     sender: 'user' | 'bot';
@@ -21,23 +21,34 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
     return (
         <List sx={{ flexGrow: 1, overflow: 'auto', padding: '10px' }}>
             {messages.map((message, index) => (
-                <ListItem key={index} sx={{ justifyContent: message.sender === 'user' ? 'flex-end' : 'flex-start' }}>
-                    <Box
-                        sx={{
-                            bgcolor: message.sender === 'user' ? 'primary.main' : 'grey.300',
-                            color: message.sender === 'user' ? 'white' : 'black',
-                            p: 2,
-                            borderRadius: 2,
-                            maxWidth: '70%',
-                        }}
-                    >
-                        <ListItemText primary={message.text} />
-                    </Box>
+                <ListItem key={index} alignItems="flex-start">
+                    <ListItemAvatar>
+                        <Avatar>
+                            <Image
+                                src={message.sender === 'user' ? '/man-user-circle-icon.png' : '/chatgpt-icon.png'} // 引用 public 目录下的图片
+                                alt={message.sender === 'user' ? 'User Avatar' : 'ChatGPT Avatar'}
+                                width={40}   // 设置宽度
+                                height={40}  // 设置高度
+                            />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            <Typography
+                                variant="body1"
+                                color={message.sender === 'user' ? 'primary' : 'secondary'}
+                            >
+                                {message.sender === 'user' ? 'You' : 'ChatGPT'}
+                            </Typography>
+                        }
+                        secondary={<Typography variant="body2">{message.text}</Typography>}
+                    />
                 </ListItem>
-            ))}
+            ))
+            }
             {/* 用于保持滚动到列表底部 */}
             <div ref={bottomRef} />
-        </List>
+        </List >
     );
 };
 
