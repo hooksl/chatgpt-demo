@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { List, ListItem, ListItemText, Box } from '@mui/material';
 
 interface Message {
@@ -11,6 +11,13 @@ interface MessageListProps {
 }
 
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+    const bottomRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        // 当消息列表更新时，滚动到底部
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
     return (
         <List sx={{ flexGrow: 1, overflow: 'auto', padding: '10px' }}>
             {messages.map((message, index) => (
@@ -28,9 +35,10 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                     </Box>
                 </ListItem>
             ))}
+            {/* 用于保持滚动到列表底部 */}
+            <div ref={bottomRef} />
         </List>
     );
 };
 
 export default MessageList;
-
