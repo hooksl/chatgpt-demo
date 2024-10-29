@@ -53,12 +53,6 @@ const ChatApp: React.FC = () => {
                 body: JSON.stringify({
                     // "model": "mistralai/mistral-7b-instruct",
                     "model": "mistralai/mistral-7b-instruct:free",
-                    // "messages": [
-                    //     {
-                    //         "role": "user",
-                    //         "content": text
-                    //     }
-                    // ]
                     "messages": recentMessages
                 })
             });
@@ -72,8 +66,6 @@ const ChatApp: React.FC = () => {
 
             const botMessage: Message = { text: botMessageText, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, botMessage]);
-            // 逐字显示 botMessageText
-            displayTypingEffect(botMessageText);
         } catch (error) {
             console.error('Error fetching response:', error);
             const errorMessage: Message = {
@@ -87,29 +79,6 @@ const ChatApp: React.FC = () => {
         }
 
     };
-    const displayTypingEffect = (text: string) => {
-        let index = 0;
-        const botMessage: Message = {
-            text: '',
-            sender: 'bot',
-        }; // 初始空文本
-
-        // 逐字更新文本
-        const typeInterval = setInterval(() => {
-            if (index < text.length) {
-                botMessage.text += text.charAt(index);
-                setMessages((prevMessages) => {
-                    const updatedMessages = [...prevMessages];
-                    updatedMessages[updatedMessages.length - 1] = botMessage; // 更新最后一条信息
-                    return updatedMessages;
-                });
-                index++;
-            } else {
-                clearInterval(typeInterval);
-                setIsTyping(false); // 完成逐字显示
-            }
-        }, 20); // 每50ms显示一个字符，可调整速度
-    };
 
     return (
         <Box
@@ -119,8 +88,6 @@ const ChatApp: React.FC = () => {
                 height: '100vh',
                 maxWidth: '800px',  // 限制最大宽度为600px
                 margin: '0 auto',   // 居中显示
-                // boxShadow: 1,       // 添加阴影，使界面更有层次感
-                // borderRadius: 2,    // 圆角
             }}
         >
             <Typography variant="h4" align="center" sx={{ m: 2 }}>
