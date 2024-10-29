@@ -8,19 +8,53 @@ interface Message {
     text: string;
     sender: 'user' | 'bot';
 }
+const OPENROUTER_API_KEY = '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';
+const YOUR_SITE_URL = '';
+const YOUR_SITE_NAME = '';
+
 
 const ChatApp: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
 
-    const handleSend = (text: string) => {
+    const handleSend = async (text: string) => {
         const newMessage: Message = { text, sender: 'user' };
         setMessages([...messages, newMessage]);
 
-        // 模拟Bot回复
-        setTimeout(() => {
-            const botMessage: Message = { text: `Bot response to: ${text}`, sender: 'bot' };
+        try {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+                    "HTTP-Referer": `${YOUR_SITE_URL}`, // Optional, for including your app on openrouter.ai rankings.
+                    "X-Title": `${YOUR_SITE_NAME}`, // Optional. Shows in rankings on openrouter.ai.
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    // "model": "mistralai/mistral-7b-instruct",
+                    "model": "mistralai/mistral-7b-instruct:free",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": text
+                        }
+                    ]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            const botMessageText = data.choices[0].message.content;
+
+            const botMessage: Message = { text: botMessageText, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, botMessage]);
-        }, 1000);
+        } catch (error) {
+            console.error('Error fetching response:', error);
+            const errorMessage: Message = { text: 'Sorry, something went wrong!', sender: 'bot' };
+            setMessages((prevMessages) => [...prevMessages, errorMessage]);
+        }
     };
 
     return (
