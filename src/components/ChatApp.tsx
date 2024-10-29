@@ -63,6 +63,7 @@ const ChatApp: React.FC = () => {
             console.error('Error fetching response:', error);
             const errorMessage: Message = { text: 'Sorry, something went wrong!', sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, errorMessage]);
+            setIsTyping(false); // 完成逐字显示
         }
 
     };
