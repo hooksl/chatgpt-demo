@@ -30,8 +30,7 @@ const ChatApp: React.FC = () => {
             text: text,
             sender: 'user',
         };
-        setMessages([...messages, newMessage]);
-
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
         try {
             setIsTyping(true);  // 开始输入
 
