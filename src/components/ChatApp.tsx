@@ -15,6 +15,7 @@ const YOUR_SITE_NAME = '';
 
 const ChatApp: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
+    const [isTyping, setIsTyping] = useState(false);  // 新增状态用于逐字显示
     useEffect(() => {
         // 在应用加载时添加欢迎词
         const welcomeMessage: Message = { text: '欢迎来到 ChatGPT UI！有什么我可以帮助您的吗？', sender: 'bot' };
@@ -26,6 +27,7 @@ const ChatApp: React.FC = () => {
         setMessages([...messages, newMessage]);
 
         try {
+            setIsTyping(true);  // 开始输入
             const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -55,11 +57,34 @@ const ChatApp: React.FC = () => {
 
             const botMessage: Message = { text: botMessageText, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, botMessage]);
+            // 逐字显示 botMessageText
+            displayTypingEffect(botMessageText);
         } catch (error) {
             console.error('Error fetching response:', error);
             const errorMessage: Message = { text: 'Sorry, something went wrong!', sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, errorMessage]);
         }
+
+    };
+    const displayTypingEffect = (text: string) => {
+        let index = 0;
+        const botMessage: Message = { text: '', sender: 'bot' }; // 初始空文本
+
+        // 逐字更新文本
+        const typeInterval = setInterval(() => {
+            if (index < text.length) {
+                botMessage.text += text.charAt(index);
+                setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+                    updatedMessages[updatedMessages.length - 1] = botMessage; // 更新最后一条信息
+                    return updatedMessages;
+                });
+                index++;
+            } else {
+                clearInterval(typeInterval);
+                setIsTyping(false); // 完成逐字显示
+            }
+        }, 20); // 每50ms显示一个字符，可调整速度
     };
 
     return (
@@ -77,6 +102,11 @@ const ChatApp: React.FC = () => {
             <Typography variant="h4" align="center" sx={{ m: 2 }}>
             </Typography>
             <MessageList messages={messages} />
+            {isTyping && (
+                <Typography variant="body2" align="center" color="textSecondary">
+                    正在输入...
+                </Typography>
+            )}
             <MessageInput onSend={handleSend} />
         </Box>
     );
