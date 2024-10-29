@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
@@ -15,6 +15,11 @@ const YOUR_SITE_NAME = '';
 
 const ChatApp: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
+    useEffect(() => {
+        // 在应用加载时添加欢迎词
+        const welcomeMessage: Message = { text: '欢迎来到 ChatGPT UI！有什么我可以帮助您的吗？', sender: 'bot' };
+        setMessages([welcomeMessage]);
+    }, []);
 
     const handleSend = async (text: string) => {
         const newMessage: Message = { text, sender: 'user' };
@@ -70,7 +75,6 @@ const ChatApp: React.FC = () => {
             }}
         >
             <Typography variant="h4" align="center" sx={{ m: 2 }}>
-                chatgpt-demo 演示
             </Typography>
             <MessageList messages={messages} />
             <MessageInput onSend={handleSend} />
